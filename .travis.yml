@@ -1,5 +1,12 @@
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libaspell-dev aspell aspell-en
 language: ruby
 rvm:
   - 2.1.0
 script:
-  - rspec tests
+  - rspec spec
+  - skeptic --lines-per-method 6 --line-length 100 --max-nesting-depth 2 --methods-per-class 15 --no-semicolons --no-trailing-whitespace --check-syntax --no-global-variables --naming-conventions engine/AI.rb
+  - skeptic --lines-per-method 6 --line-length 100 --max-nesting-depth 2 --methods-per-class 15 --no-semicolons --no-trailing-whitespace --check-syntax --no-global-variables --naming-conventions engine/board.rb
+  - skeptic --lines-per-method 6 --line-length 100 --max-nesting-depth 2 --methods-per-class 15 --no-semicolons --no-trailing-whitespace --check-syntax --no-global-variables --naming-conventions engine/game.rb
+  - skeptic --lines-per-method 6 --line-length 100 --max-nesting-depth 2 --methods-per-class 15 --no-semicolons --no-trailing-whitespace --check-syntax --no-global-variables --naming-conventions engine/player.rb

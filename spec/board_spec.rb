@@ -1,4 +1,4 @@
-require '../engine/board'
+require "spec_helper"
 
 describe "RubiesBoard" do
   let (:board) { make_board }

@@ -6,8 +6,12 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 $:<< File.join(File.dirname(__FILE__), '..')
 
-require "engine/board"
+# require 'json'
+# require 'bundler/setup'
 require 'coveralls'
+
+require 'engine/board'
+
 Coveralls.wear!
 
 RSpec.configure do |config|
@@ -21,3 +25,4 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = 'random'
 end
+

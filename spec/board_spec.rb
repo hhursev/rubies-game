@@ -69,6 +69,17 @@ describe "RubiesBoard" do
     remove_these = [[3, 1], [3, 3]]
     expect { board.take_out(*remove_these) }.to raise_error(RubiesNotConnected)
   end
+
+  it "check if exceptions are prioritize correctly" do
+    # OutOfBoard is with higher priority that others custom exceptions
+    remove_these = [[1, 1], [1, 5]]
+    expect { board.take_out(*remove_these) }.to raise_error(OutOfBoard)
+  end
+
+  it "check if MustTakeFromOneRow is with higher priority than RubiesNotConnected" do
+    remove_these = [[3, 1], [3, 3], [4, 1]]
+    expect { board.take_out(*remove_these) }.to raise_error(MustTakeFromOneRow)
+  end
 end
 
 def make_board(*args)

@@ -12,6 +12,34 @@ describe "RubiesBoard" do
     board.should respond_to :board
   end
 
+  it "verifies that RubiesBoard respond to picture method" do
+    board.should respond_to :picture
+  end
+
+  it "verifies that RubiesBoard does not respond to initialize board" do
+    board.should_not respond_to :initialize_board
+  end
+
+  it "verifies that RubiesBoard does not respond to fill column (mutator)" do
+    board.should_not respond_to :fill_column
+  end
+
+  it "verifies that RubiesBoard does not respond to fill method (mutator)" do
+    board.should_not respond_to :fill
+  end
+
+  it "verifies that RubiesBoard does not respond to empty method (mutator)" do
+    board.should_not respond_to :empty
+  end
+
+  it "verifies that RubiesBoard responds to take out method" do
+    board.should respond_to :take_out
+  end
+
+  it "verifies that RubiesBoard responds to empty? predicate" do
+    board.should respond_to :empty?
+  end
+
   it "freshly setted board always has [1, 1]" do
     board.filled?(1, 1).should eq true
     small_board.filled?(1, 1).should eq true
@@ -70,15 +98,37 @@ describe "RubiesBoard" do
     expect { board.take_out(*remove_these) }.to raise_error(RubiesNotConnected)
   end
 
-  it "check if exceptions are prioritize correctly" do
-    # OutOfBoard is with higher priority that others custom exceptions
+  it "verifies that exceptions are prioritize correctly" do
     remove_these = [[1, 1], [1, 5]]
     expect { board.take_out(*remove_these) }.to raise_error(OutOfBoard)
   end
 
-  it "check if MustTakeFromOneRow is with higher priority than RubiesNotConnected" do
+  it "verifies that MustTakeFromOneRow is with higher priority than RubiesNotConnected" do
     remove_these = [[3, 1], [3, 3], [4, 1]]
     expect { board.take_out(*remove_these) }.to raise_error(MustTakeFromOneRow)
+  end
+
+  it "says that the picture of the board is in 5 lines" do
+    board.picture.count("\n").should eq 4
+  end
+
+  it "says that the picture of the small_board is with 2 lines (rows)" do
+    small_board.picture.count("\n").should eq 1
+  end
+
+  it "says that the rubies on the board are within in (15..30) range" do
+    board.picture.count('x').should be_between(15, 30)
+  end
+
+  it "says that the rubies on the small_board are within (3..6) range" do
+    small_board.picture.count('x').should be_between(3, 6)
+  end
+
+  it "illustrates when we take rubies off the board the picture changes" do
+    rubies_count_before = board.picture.count('x')
+    board.take_out([3, 1], [3, 2], [3, 3])
+    rubies_count_after  = board.picture.count('x')
+    rubies_count_before.should eq rubies_count_after + 3
   end
 end
 

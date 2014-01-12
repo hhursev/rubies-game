@@ -43,18 +43,31 @@ describe "RubiesBoard" do
   end
 
   it "moves multiple rubies off the board" do
+    remove_these = [[2, 1], [2, 2]]
+    board.filled?(2, 1).should eq true
+    board.take_out(*remove_these)
+    board.filled?(2, 1).should eq false
+    board.filled?(2, 2).should eq false
   end
 
-  it "raises error when move is against the rules" do
+  it "does not raise error when taking single ruby" do
+    remove_these = [[2, 1]]
+    board.take_out(*remove_these)
   end
 
   it "raises custom error when out of board action occurs" do
+    remove_these = [[1, 5]]
+    expect { board.take_out(*remove_these) }.to raise_error(OutOfBoard)
   end
 
   it "raises error when rubies taken are not on same row" do
+    remove_these = [[1, 1], [2, 1]]
+    expect { board.take_out(*remove_these) }.to raise_error(MustTakeFromOneRow)
   end
 
   it "raises error when rubies taken are not connected" do
+    remove_these = [[3, 1], [3, 3]]
+    expect { board.take_out(*remove_these) }.to raise_error(RubiesNotConnected)
   end
 end
 

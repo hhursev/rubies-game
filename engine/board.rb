@@ -27,12 +27,10 @@ class RubiesBoard
   end
 
   def picture
-    #must find out the longest column
-    #based on it to arrange the rest
-    #and centralize them beautifully
-
-    #find out how to test this as
-    #we have random board always...
+    board_width = 2 * board.keys.map { |_, column| column }.max
+    board.keys.sort.group_by(&:first).values().map do |row|
+      row.map { |row, column| draw_position row, column }.join(' ').center(board_width) + "\n"
+    end.join('').chop
   end
 
   def take_out(*positions)
@@ -69,5 +67,17 @@ class RubiesBoard
 
   def fill_column(row, columns_count)
     1.upto(columns_count).each { |column| fill row, column }
+  end
+
+  def draw_position(row, column)
+    @board[[row, column]] ? draw_ruby : draw_taken_ruby
+  end
+
+  def draw_ruby
+    'x'
+  end
+
+  def draw_taken_ruby
+    ' '
   end
 end

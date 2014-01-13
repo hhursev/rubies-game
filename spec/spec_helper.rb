@@ -7,6 +7,7 @@ $:<< File.join(File.dirname(__FILE__), '..')
 # require 'bundler/setup'
 
 require 'engine/board'
+require 'engine/AI'
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

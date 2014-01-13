@@ -27,8 +27,8 @@ class RubiesBoard
   end
 
   def picture
-    board_width = 2 * board.keys.map { |_, column| column }.max
-    board.keys.sort.group_by(&:first).values().map do |row|
+    board_width = 2 * @board.keys.map { |_, column| column }.max
+    @board.keys.sort.group_by(&:first).values().map do |row|
       row.map { |row, column| draw_position row, column }.join(' ').center(board_width) + "\n"
     end.join('').chop
   end

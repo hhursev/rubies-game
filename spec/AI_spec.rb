@@ -1,7 +1,7 @@
 require "spec_helper"
 
 class RubiesBoard
-  def initialize(rows: 5, custom_board: false)
+  def initialize(rows=5, custom_board: false)
     @rows = rows
     custom_board ? @board = custom_board : @board = {}
     initialize_board custom_board

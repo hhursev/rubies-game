@@ -40,6 +40,10 @@ describe "RubiesBoard" do
     board.should respond_to :empty?
   end
 
+  it "verifies that RubiesBoard responds to filled? position method" do
+    board.should respond_to :filled?
+  end
+
   it "freshly setted board always has [1, 1]" do
     board.filled?(1, 1).should eq true
     small_board.filled?(1, 1).should eq true

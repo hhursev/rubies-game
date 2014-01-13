@@ -40,13 +40,13 @@ describe "RubiesBoard" do
     board.should respond_to :empty?
   end
 
-  it "verifies that RubiesBoard responds to filled? position method" do
-    board.should respond_to :filled?
+  it "verifies that RubiesBoard responds to filled_at? position method" do
+    board.should respond_to :filled_at?
   end
 
-  it "freshly setted board always has [1, 1]" do
-    board.filled?(1, 1).should eq true
-    small_board.filled?(1, 1).should eq true
+  it "freshly set board always has [1, 1]" do
+    board.filled_at?(1, 1).should eq true
+    small_board.filled_at?(1, 1).should eq true
   end
 
   it "initialize rows and columns within the correct range" do
@@ -76,10 +76,10 @@ describe "RubiesBoard" do
 
   it "moves multiple rubies off the board" do
     remove_these = [[2, 1], [2, 2]]
-    board.filled?(2, 1).should eq true
+    board.filled_at?(2, 1).should eq true
     board.take_out(*remove_these)
-    board.filled?(2, 1).should eq false
-    board.filled?(2, 2).should eq false
+    board.filled_at?(2, 1).should eq false
+    board.filled_at?(2, 2).should eq false
   end
 
   it "does not raise error when taking single ruby" do

@@ -35,7 +35,7 @@ class RubiesBoard
 
   def take_out(*positions)
     columns = positions.flat_map { |_, column| column }
-    raise OutOfBoard         if positions.map { |row, column| filled?(row, column) }.include? nil
+    raise OutOfBoard         if positions.map { |row, column| filled_at? row, column }.include? nil
     raise MustTakeFromOneRow if positions.map { |row, _| row }.uniq.size > 1
     if columns.size > 1
       raise RubiesNotConnected if columns.map { |x| (columns & [x + 1, x - 1]).any? }.include? false
@@ -47,7 +47,7 @@ class RubiesBoard
     @board.values.none?
   end
 
-  def filled?(x, y)
+  def filled_at?(x, y)
     @board[[x, y]]
   end
 

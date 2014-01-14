@@ -1,48 +1,44 @@
+require_relative 'board'
+
 class AI
-  def initialize board, difficulty=:hard
-    @board      = board
-    @difficulty = difficulty
+  attr_reader :rubies_board, :difficulty
+
+  def initialize(rubies_board, difficulty=:hard)
+    @difficulty   = difficulty
+    @rubies_board = rubies_board
   end
 
   def moves
-    if difficulty == :hard
-      MasterAlgorithm.new(@board).decision
+    if @difficulty == :hard
+      MasterAlgorithm.new(@rubies_board).decision
     else
-      JuniorAlgorithm.new(@board).decision
+      JuniorAlgorithm.new(@rubies_board).decision
     end
   end
 
-  class MasterAlgorithm
-    def initialize board
-      @board = board
+  class BaseAlgorithmFunctionality
+    def initialize(rubies_board)
+      @rubies_board = rubies_board
     end
 
+    def stacks
+      @rubies_board.board.keys.sort.group_by(&:first).values().map do |row|
+        row.map { |row, column| @rubies_board.filled_at? row, column }
+           .slice_before(false).map { |slice| slice.count(true) }
+      end.flatten.reject { |stack| stack.zero? }
+    end
+
+    def nim_sum_zero?
+      stacks.inject(&:^).zero? ? true : false
+    end
+  end
+
+  class MasterAlgorithm < BaseAlgorithmFunctionality
     def decision
     end
-
-    private
-
-    # function that takes exactly specific count of rubies
-    # function that takes random number of rubies
-    # function that calculates the num sum
-    # function that check if only single matches + bigget stack are available
-    def nim_sum(*stacks)
-      stacks.inject(&:^)
-    end
-
-    def break_stacks_in_power_of_twos
-    end
-
-    def power_of_2?(number)
-      number.to_s(2).scan(/1/).size == 1
-    end
   end
 
-  class JuniorAlgorithm
-    def initialize board
-       @board = board
-    end
-
+  class JuniorAlgorithm < BaseAlgorithmFunctionality
     def decision
     end
   end

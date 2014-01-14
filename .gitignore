@@ -1,0 +1,6 @@
+.bundle/
+Gemfile.lock
+coverage/
+rubies_game.sublime-project
+rubies_game.sublime-workspace
+.gitignore

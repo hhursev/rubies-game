@@ -16,11 +16,10 @@ class OutOfBoard < StandardError
   end
 end
 
-
 class RubiesBoard
   attr_reader :board
 
-  def initialize rows=5
+  def initialize(rows=5)
     @rows  = rows
     @board = {}
     initialize_board
@@ -29,7 +28,7 @@ class RubiesBoard
   def picture
     board_width = 2 * @board.keys.map { |_, column| column }.max
     @board.keys.sort.group_by(&:first).values().map do |row|
-      row.map { |row, column| draw_position row, column }.join(' ').center(board_width) + "\n"
+      row.map { |row, col| draw_position row, col }.join(' ').center(board_width).rstrip + "\n"
     end.join('').chop
   end
 

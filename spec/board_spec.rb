@@ -44,6 +44,12 @@ describe "RubiesBoard" do
     board.should respond_to :filled_at?
   end
 
+  it "initializes RubiesBoard with custom rows count within the correct range" do
+    rubies_board = RubiesBoard.new(rows=3)
+    (rubies_board.board.keys().map { |r, c| c.between?(1, r*2) }.all?).should eq true
+    (rubies_board.board.keys().map { |r, _| r <= 3 }.all?).should eq true
+  end
+
   it "freshly set board always has [1, 1]" do
     board.filled_at?(1, 1).should eq true
     small_board.filled_at?(1, 1).should eq true

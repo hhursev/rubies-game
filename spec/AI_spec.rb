@@ -33,6 +33,26 @@ describe "AI" do
       [5, 6] => nil, [5, 7] => nil, [5, 8] => nil
                       }
 
+    it "checks that AI responds to moves" do
+      ai.should respond_to :moves
+    end
+
+    it "checks that AI responds to rubies_board reader" do
+      ai.should respond_to :rubies_board
+    end
+
+    it "checks that AI responds to difficulty reader" do
+      ai.should respond_to :difficulty
+    end
+
+    it "says AI doesnt respond to rubies_board setter after initialization" do
+      ai.should_not respond_to :rubies_board=
+    end
+
+    it "says AI doesnt respond to difficulty setter after initialization" do
+      ai.should_not respond_to :difficulty=
+    end
+
     it "checks that algorithms responds to stacks" do
       master_algorithm.should respond_to :stacks
       junior_algorithm.should respond_to :stacks
@@ -46,6 +66,12 @@ describe "AI" do
     it "checks that algorithms respond to decision" do
       master_algorithm.should respond_to :decision
       junior_algorithm.should respond_to :decision
+    end
+
+    it "verifies that the AI initialization works the right way" do
+      test_ai = AI.new(make_board, difficulty=:hard)
+      test_ai.rubies_board.should be_a(RubiesBoard)
+      test_ai.difficulty.should eq :hard
     end
 
     it "tests if i can create custom board" do

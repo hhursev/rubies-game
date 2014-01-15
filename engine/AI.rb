@@ -28,19 +28,18 @@ class AI
       end.flatten.reject { |stack| stack.zero? }
     end
 
-
     def random_take
       rubies_to_take = rand(1..stacks.max)
       take rubies_to_take, stacks.keep_if { |stack| stack >= rubies_to_take }.sample()
     end
 
     def single_rubies_with_stack
-      take((stacks.size.even? ? stacks.max : stacks.max - 1), stacks.max)
+      take (stacks.size.even? ? stacks.max : stacks.max - 1), stacks.max
     end
 
     def take(rubies_count, from_stack_sized)
       row, column = locate_stack(from_stack_sized)
-      (0...rubies_count).map { |x| [row, column - x] }
+      0.upto(rubies_count - 1).map { |x| [row, column - x] }
     end
 
     def locate_stack(stack_size)
@@ -74,7 +73,7 @@ class AI
     def how_many_rubies_from_which_stack
       altered_stacks = stacks.sort.reverse
       altered_stacks.each_with_index do |stack, index|
-        (1..stack).each do |rubies|
+        1.upto(stack).each do |rubies|
           altered_stacks[index] -= rubies
           return [rubies, altered_stacks[index] + rubies] if altered_stacks.reduce(&:^).zero?
           altered_stacks[index] += rubies

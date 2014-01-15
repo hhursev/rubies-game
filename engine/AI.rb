@@ -13,7 +13,9 @@ class AI
       JuniorAlgorithm.new(@rubies_board).decision
     end
   end
+end
 
+class AI
   class BaseAlgorithmFunctionality
     def initialize(rubies_board)
       @rubies_board = rubies_board

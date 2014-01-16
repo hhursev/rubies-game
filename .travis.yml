@@ -1,6 +1,7 @@
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq libaspell-dev aspell aspell-en
+  - sudo apt-get install libsqlite3-dev
 language: ruby
 rvm:
   - 2.1.0

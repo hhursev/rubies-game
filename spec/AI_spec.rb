@@ -294,6 +294,27 @@ describe "AI" do
       end
     end
 
+    it "junior algorithm don't use random when single rubies and big stack of rubies" do
+      <<-DENTED_BOARD_1_2_3_5_8_vol9
+            x
+           o x
+          x o o
+         x o o o o
+      x o o o x x x x
+      DENTED_BOARD_1_2_3_5_8_vol9
+
+      board_hash   = BOARD_1_2_3_5_8
+      row, column = 0, 1
+      custom_board = make_board custom_board: board_hash
+      custom_board.take_out [2, 1]
+      custom_board.take_out [3, 2], [3, 3]
+      custom_board.take_out [4, 2], [4, 3], [4, 4], [4, 5]
+      custom_board.take_out [5, 2], [5, 3], [5, 4]
+      test_ai   = make_ai custom_board, difficulty=:junior
+
+      test_ai.moves.should eq [[5, 8], [5, 7], [5, 6], [5, 5]]
+    end
+
     def master_algorithm(*args)
         args.empty? ? AI::MasterAlgorithm.new(board) : AI::MasterAlgorithm.new(*args)
       end

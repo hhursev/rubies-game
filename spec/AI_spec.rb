@@ -76,7 +76,7 @@ describe "AI" do
     end
 
     it "verifies that the AI initialization works the right way" do
-      test_ai = AI.new(make_board, difficulty=:hard)
+      test_ai = AI.(make_board, difficulty=:hard)
       test_ai.rubies_board.should be_a(RubiesBoard)
       test_ai.difficulty.should eq :hard
     end
@@ -311,5 +311,3 @@ end
 def make_ai(*args)
   args.empty? ? AI.new(make_board) : AI.new(*args)
 end
-
-

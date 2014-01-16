@@ -136,6 +136,22 @@ describe "RubiesBoard" do
     rubies_count_after  = board.picture.count('x')
     rubies_count_before.should eq rubies_count_after + 3
   end
+
+  context "initialization" do
+    it "allows to set custom rows count" do
+      custom_board = make_board(4)
+      custom_board.board.keys.map { |row, column| row }.uniq.size.should eq 4
+    end
+
+    it "every row columns start counting from one and reach at the row number" do
+      custom_board = make_board()
+      rows = custom_board.board.keys.map { |row, _| row }.uniq
+      rows.each do |row|
+        columns_on_row = custom_board.board.keys.map { |r, column| column if r == row }
+        (1.upto(row).to_a & columns_on_row).size.should eq row
+      end
+    end
+  end
 end
 
 def make_board(*args)

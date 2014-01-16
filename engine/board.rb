@@ -22,7 +22,7 @@ class RubiesBoard
   def initialize(rows=5)
     @rows  = rows
     @board = {}
-    initialize_board
+    1.upto(@rows).map { |row| fill_column row, rand(row..row*2) }
   end
 
   def picture
@@ -58,10 +58,6 @@ class RubiesBoard
 
   def fill(row, column)
     @board[[row, column]] = true
-  end
-
-  def initialize_board
-    1.upto(@rows).map { |row| fill_column row, rand(row..row*2) }
   end
 
   def fill_column(row, columns_count)

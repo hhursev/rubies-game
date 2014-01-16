@@ -16,10 +16,6 @@ describe "RubiesBoard" do
     board.should respond_to :picture
   end
 
-  it "verifies that RubiesBoard does not respond to initialize board" do
-    board.should_not respond_to :initialize_board
-  end
-
   it "verifies that RubiesBoard does not respond to fill column (mutator)" do
     board.should_not respond_to :fill_column
   end

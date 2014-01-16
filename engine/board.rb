@@ -20,9 +20,10 @@ class RubiesBoard
   attr_reader :board
 
   def initialize(rows=5)
-    @rows  = rows
     @board = {}
-    1.upto(@rows).map { |row| fill_column row, rand(row..row*2) }
+    1.upto(rows).each do |row|
+      1.upto(rand(row..row*2)).map { |column| board[[row, column]] = true }
+    end
   end
 
   def picture

@@ -95,8 +95,10 @@ end
 
 while true
   play = nil
-  puts "do you want to play a game? y/n"
-  play = gets.chomp
+  until play == 'y' or play == 'n'
+    puts "do you want to play a game? y/n"
+    play = gets.chomp
+  end
   if play == 'n'
     puts "Fuck you and have a nice day :)"
     exit

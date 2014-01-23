@@ -16,6 +16,12 @@ class OutOfBoard < StandardError
   end
 end
 
+class RubyAlreadyTaken < StandardError
+  def initialize(message="This ruby is already taken")
+    super(message)
+  end
+end
+
 class RubiesBoard
   attr_reader :board
 
@@ -34,12 +40,10 @@ class RubiesBoard
   end
 
   def take_out(*positions)
-    columns = positions.flat_map { |_, column| column }
     raise OutOfBoard         if positions.map { |row, column| filled_at? row, column }.include? nil
+    raise RubyAlreadyTaken   if positions.any? { |row, column| filled_at?(row, column) == false }
     raise MustTakeFromOneRow if positions.map { |row, _| row }.uniq.size > 1
-    if columns.size > 1
-      raise RubiesNotConnected if columns.map { |x| (columns & [x + 1, x - 1]).any? }.include? false
-    end
+    raise RubiesNotConnected unless columns_neighbours? positions
     positions.map { |row, column| empty(row, column) }
   end
 
@@ -52,6 +56,12 @@ class RubiesBoard
   end
 
   private
+
+  def columns_neighbours?(positions)
+    columns = positions.flat_map { |_, column| column }
+    return true if columns.size == 1
+    columns.all? { |x| (columns & [x + 1, x - 1]).any? }
+  end
 
   def empty(row, column)
     @board[[row, column]] = false
@@ -74,6 +84,6 @@ class RubiesBoard
   end
 
   def draw_taken_ruby
-    ' '
+    'o'
   end
 end

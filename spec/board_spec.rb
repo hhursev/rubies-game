@@ -40,6 +40,10 @@ describe "RubiesBoard" do
     board.should respond_to :filled_at?
   end
 
+  it "verifies that RubiesBoard doesnt respond to columns_neighbours?" do
+    board.should_not respond_to :columns_neighbours?
+  end
+
   it "initializes RubiesBoard with custom rows count within the correct range" do
     rubies_board = RubiesBoard.new(rows=3)
     (rubies_board.board.keys().map { |r, c| c.between?(1, r*2) }.all?).should eq true
@@ -72,7 +76,7 @@ describe "RubiesBoard" do
     board.take_out([1, 1])
     board.empty?.should eq false
     board_positions = board.board.keys()
-    board_positions.map { |position| board.take_out position }
+    board_positions.map { |position| board.take_out position if position != [1, 1] }
     board.empty?.should eq true
   end
 
@@ -99,6 +103,12 @@ describe "RubiesBoard" do
     expect { board.take_out(*remove_these) }.to raise_error(MustTakeFromOneRow)
   end
 
+  it "raises custom error when trying to take ruby, already taken" do
+    board.take_out([2, 2])
+    remove_these = [[2, 1], [2, 2]]
+    expect { board.take_out(*remove_these) }.to raise_error(RubyAlreadyTaken)
+  end
+
   it "raises error when rubies taken are not connected" do
     remove_these = [[3, 1], [3, 3]]
     expect { board.take_out(*remove_these) }.to raise_error(RubiesNotConnected)
@@ -112,6 +122,12 @@ describe "RubiesBoard" do
   it "verifies that MustTakeFromOneRow is with higher priority than RubiesNotConnected" do
     remove_these = [[3, 1], [3, 3], [4, 1]]
     expect { board.take_out(*remove_these) }.to raise_error(MustTakeFromOneRow)
+  end
+
+  it "verifies that RubyAlreadyTaken is with higher priority than RubiesNotConnected" do
+    board.take_out([5, 3])
+    remove_these = [[5, 2], [5, 3], [5, 5]]
+    expect { board.take_out(*remove_these) }.to raise_error(RubyAlreadyTaken)
   end
 
   it "says that the picture of the board is in 5 lines" do

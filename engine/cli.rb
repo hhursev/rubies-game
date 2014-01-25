@@ -1,6 +1,5 @@
 # $:.unshift File.dirname(__FILE__)
 require_relative 'board'
-require_relative 'player'
 require_relative 'game'
 require_relative 'ai'
 
@@ -62,7 +61,7 @@ class CLIGamePlay
   def play_game
     while true
       return puts "The winner is " + @game.winner if @game.winner
-      @game.print_board
+      puts @game.print_board
       make_move
     end
   end

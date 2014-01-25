@@ -16,7 +16,7 @@ class RubiesGame
   def make_move(these)
     begin
       @board.take_out(*these)
-    rescue MustTakeFromOneRow, RubiesNotConnected, OutOfBoard, RubyAlreadyTaken
+    rescue MustTakeFromOneRow, RubiesNotConnected, OutOfBoard, RubyAlreadyTaken, SelectSomething
       @on_turn.reverse!
       raise
     ensure
@@ -42,9 +42,9 @@ class RubiesGame
   end
 
   def print_board
-    puts "-" * (@board.board.keys.map { |_, x| x }.max * 2 - 1) + "\n"
-    puts @board.picture
-    puts "-" * (@board.board.keys.map { |_, x| x }.max * 2 - 1) + "\n"
+    "-" * (@board.board.keys.map { |_, x| x }.max * 2 - 1) + "\n" +
+    @board.picture                                         + "\n" +
+    "-" * (@board.board.keys.map { |_, x| x }.max * 2 - 1) + "\n"
   end
 
   private

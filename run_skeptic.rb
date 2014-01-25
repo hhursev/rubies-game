@@ -9,5 +9,7 @@ command = CONFIG_DICT.map { |k, v| v == true ? '--%s' % k : '--%s %s' % [k, v] }
                      .join(' ')
                      .prepend('skeptic ')
 
+files.delete("engine/ui.rb")
+
 Kernel.exit(1) if files.map { |file| system(command + ' ' + file) }.include? false
 Kernel.exit(0)

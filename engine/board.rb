@@ -22,6 +22,12 @@ class RubyAlreadyTaken < StandardError
   end
 end
 
+class SelectSomething < StandardError
+  def initialize(message="At least select something")
+    super(message)
+  end
+end
+
 class RubiesBoard
   attr_reader :board
 
@@ -40,6 +46,7 @@ class RubiesBoard
   end
 
   def take_out(*positions)
+    raise SelectSomething    if positions == []
     raise OutOfBoard         if positions.map { |row, column| filled_at? row, column }.include? nil
     raise RubyAlreadyTaken   if positions.any? { |row, column| filled_at?(row, column) == false }
     raise MustTakeFromOneRow if positions.map { |row, _| row }.uniq.size > 1

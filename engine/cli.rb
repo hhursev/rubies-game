@@ -3,7 +3,7 @@ require_relative "board"
 require_relative "game"
 require_relative "ai"
 
-class CLIGamePlay
+class CLIGameplay
   def initialize
     @computer, @play_vs_ai, @ai_difficulty, @start_second_vs_ai, @load = nil
     play_new_game_or_load?
@@ -79,7 +79,7 @@ class CLIGamePlay
   end
 
   def make_move
-    @game.show_last_move
+    puts @game.last_move
     if @game.on_move_is == "computer"
       computer_move
     else
@@ -106,14 +106,14 @@ class CLIGamePlay
 
   def save_game(player_move)
     player_move.slice!("save")
-    RubiesGame.dump_to_file(@game, player_move.tr("/\?:*<>: ","_"))
+    RubiesGame.dump_to_file(@game, player_move.strip.tr("/\?:*<>: ","_"))
   end
 
   def load_game
     saved_games = Dir.entries("saved_games").select { |entry| entry != '.' and entry != '..' }
                                             .join("\n")
 
-    puts "---- LIST OF SAVED GAMES ----\n #{saved_games}\n" + "-------               -------\n"
+    puts "---- LIST OF SAVED GAMES ----\n #{saved_games} \n-------               -------\n"
 
     until @game != nil
       load_game = gets.chomp
@@ -132,6 +132,6 @@ while true
     puts "Fuck you and have a nice day :)"
     exit
   else
-    CLIGamePlay.new()
+    CLIGameplay.new()
   end
 end

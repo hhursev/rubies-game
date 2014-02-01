@@ -1,7 +1,7 @@
 class RubiesGame
-  attr_reader :board, :first_player, :second_player, :ai_difficulty
+  attr_reader :board, :first_player, :second_player, :ai_difficulty, :last_move
 
-  def initialize(board, first_player, second_player, ai_difficulty)
+  def initialize(board, first_player, second_player, ai_difficulty=nil)
     @board         = board
     @first_player  = first_player
     @second_player = second_player
@@ -18,10 +18,6 @@ class RubiesGame
 
   def on_move_is
     return @on_turn.first
-  end
-
-  def show_last_move
-    puts @last_move
   end
 
   def make_move(these)

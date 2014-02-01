@@ -17,6 +17,13 @@ class CLIGamePlay
 
   private
 
+  def play_new_game_or_load?
+    until @load == "load" or @load == "new"
+      puts "do you want to load from saved game or star new one load/new"
+      @load = gets.chomp
+    end
+  end
+
   def play_vs_ai?
     until @play_vs_ai == 'y' or @play_vs_ai == 'n'
       puts "do you want to play vs AI? y/n"
@@ -93,6 +100,23 @@ class CLIGamePlay
       @game.human_move(player_move)
     rescue Exception => e
       puts e.message
+    end
+  end
+
+  def save_game(player_move)
+    player_move.slice!("save")
+    RubiesGame.dump_to_file(@game, player_move.tr("/\?:*<>: ","_"))
+  end
+
+  def load_game
+    saved_games = Dir.entries("saved_games").select { |entry| entry != '.' and entry != '..' }
+                                            .join("\n")
+
+    puts "---- LIST OF SAVED GAMES ----\n #{saved_games}\n" + "-------               -------\n"
+
+    until @game != nil
+      load_game = gets.chomp
+      @game = Marshal.load(File.read("saved_games/#{load_game}"))
     end
   end
 end

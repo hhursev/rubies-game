@@ -79,7 +79,8 @@ class CLIGamePlay
   end
 
   def make_move
-    if @game.on_move_is == 'computer'
+    @game.show_last_move
+    if @game.on_move_is == "computer"
       computer_move
     else
       player_move
@@ -87,15 +88,15 @@ class CLIGamePlay
   end
 
   def computer_move
-    computer = AI.new(@game.board, @ai_difficulty.to_sym)
+    computer = AI.new(@game.board, @game.ai_difficulty.to_sym)
     ai_move = computer.moves
     @game.make_move ai_move
-    puts "The AI moved: " + ai_move.to_s
   end
 
   def player_move
     puts "write down your move " + @game.on_move_is + "\n"
     player_move = gets.chomp
+    save_game(player_move) if player_move.start_with? "save"
     begin
       @game.human_move(player_move)
     rescue Exception => e

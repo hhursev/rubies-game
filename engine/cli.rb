@@ -5,8 +5,13 @@ require_relative 'ai'
 
 class CLIGamePlay
   def initialize
-    @computer, @play_vs_ai, @ai_difficulty, @start_second_vs_ai = nil
-    initialize_game
+    @computer, @play_vs_ai, @ai_difficulty, @start_second_vs_ai, @load = nil
+    play_new_game_or_load?
+    if @load == "load"
+      load_game
+    else
+      initialize_game
+    end
     play_game
   end
 

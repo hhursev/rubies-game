@@ -1,7 +1,7 @@
 # $:.unshift File.dirname(__FILE__)
-require_relative 'board'
-require_relative 'game'
-require_relative 'ai'
+require_relative "board"
+require_relative "game"
+require_relative "ai"
 
 class CLIGamePlay
   def initialize
@@ -19,21 +19,21 @@ class CLIGamePlay
 
   def play_new_game_or_load?
     until @load == "load" or @load == "new"
-      puts "do you want to load from saved game or star new one load/new"
+      puts "do you want to load from saved game or start new one load/new"
       @load = gets.chomp
     end
   end
 
   def play_vs_ai?
-    until @play_vs_ai == 'y' or @play_vs_ai == 'n'
+    until @play_vs_ai == "y" or @play_vs_ai == "n"
       puts "do you want to play vs AI? y/n"
       @play_vs_ai = gets.chomp
     end
   end
 
   def ai_difficulty?
-    if @play_vs_ai == 'y'
-      until @ai_difficulty == 'hard' or @ai_difficulty == 'easy'
+    if @play_vs_ai == "y"
+      until @ai_difficulty == "hard" or @ai_difficulty == "easy"
         puts "select ai difficulty: hard/easy"
         @ai_difficulty = gets.chomp
       end
@@ -43,7 +43,7 @@ class CLIGamePlay
   def initialize_game
     play_vs_ai?
     ai_difficulty?
-    if @play_vs_ai == 'y'
+    if @play_vs_ai == "y"
       initialize_game_vs_ai
     else
       initialize_game_vs_human
@@ -52,19 +52,19 @@ class CLIGamePlay
 
   def initialize_game_vs_ai
     start_second_vs_ai?
-    if @start_second_vs_ai == 'y'
-      @game = RubiesGame.new(RubiesBoard.new(), 'computer', 'human_player')
+    if @start_second_vs_ai == "y"
+      @game = RubiesGame.new(RubiesBoard.new(), "computer", "human_player", @ai_difficulty)
     else
-      @game = RubiesGame.new(RubiesBoard.new(), 'human_player', 'computer')
+      @game = RubiesGame.new(RubiesBoard.new(), "human_player", "computer", @ai_difficulty)
     end
   end
 
   def initialize_game_vs_human
-    @game = RubiesGame.new(RubiesBoard.new(), 'first_player', 'second_player')
+    @game = RubiesGame.new(RubiesBoard.new(), "first_player", "second_player")
   end
 
   def start_second_vs_ai?
-    until @start_second_vs_ai == 'y' or @start_second_vs_ai == 'n'
+    until @start_second_vs_ai == "y" or @start_second_vs_ai == "n"
       puts "do you want to start second y/n"
       @start_second_vs_ai = gets.chomp
     end
@@ -123,11 +123,11 @@ end
 
 while true
   play = nil
-  until play == 'y' or play == 'n'
+  until play == "y" or play == "n"
     puts "do you want to play a game? y/n"
     play = gets.chomp
   end
-  if play == 'n'
+  if play == "n"
     puts "Fuck you and have a nice day :)"
     exit
   else

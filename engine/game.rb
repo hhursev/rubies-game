@@ -11,22 +11,20 @@ class RubiesGame
   end
 
   def winner
-    if @board.empty?
-      @on_turn.first
-    end
+    @on_turn.first if @board.empty?
   end
 
   def on_move_is
-    return @on_turn.first
+    @on_turn.first
   end
 
   def make_move(these)
     begin
       @board.take_out(*these)
       @last_move = "#{on_move_is} moved: #{these}"
-    rescue MustTakeFromOneRow, RubiesNotConnected, OutOfBoard, RubyAlreadyTaken, SelectSomething
+    rescue => error
       @on_turn.reverse!
-      raise
+      raise error
     ensure
       @on_turn.reverse!
     end

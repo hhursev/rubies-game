@@ -95,39 +95,39 @@ describe "RubiesBoard" do
 
   it "raises custom error when out of board action occurs" do
     remove_these = [[1, 5]]
-    expect { board.take_out(*remove_these) }.to raise_error(OutOfBoard)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::OutOfBoard)
   end
 
   it "raises error when rubies taken are not on same row" do
     remove_these = [[1, 1], [2, 1]]
-    expect { board.take_out(*remove_these) }.to raise_error(MustTakeFromOneRow)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::MustTakeFromOneRow)
   end
 
   it "raises custom error when trying to take ruby, already taken" do
     board.take_out([2, 2])
     remove_these = [[2, 1], [2, 2]]
-    expect { board.take_out(*remove_these) }.to raise_error(RubyAlreadyTaken)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::RubyAlreadyTaken)
   end
 
   it "raises error when rubies taken are not connected" do
     remove_these = [[3, 1], [3, 3]]
-    expect { board.take_out(*remove_these) }.to raise_error(RubiesNotConnected)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::RubiesNotConnected)
   end
 
   it "verifies that exceptions are prioritize correctly" do
     remove_these = [[1, 1], [1, 5]]
-    expect { board.take_out(*remove_these) }.to raise_error(OutOfBoard)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::OutOfBoard)
   end
 
   it "verifies that MustTakeFromOneRow is with higher priority than RubiesNotConnected" do
     remove_these = [[3, 1], [3, 3], [4, 1]]
-    expect { board.take_out(*remove_these) }.to raise_error(MustTakeFromOneRow)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::MustTakeFromOneRow)
   end
 
   it "verifies that RubyAlreadyTaken is with higher priority than RubiesNotConnected" do
     board.take_out([5, 3])
     remove_these = [[5, 2], [5, 3], [5, 5]]
-    expect { board.take_out(*remove_these) }.to raise_error(RubyAlreadyTaken)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::RubyAlreadyTaken)
   end
 
   it "says that the picture of the board is in 5 lines" do

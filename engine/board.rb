@@ -29,36 +29,37 @@ class BoardErrorHandler
     end
   end
 
-  def self.check_for_errors(positions, board)
-    raise SelectSomething    unless someting_is_selected positions
-    raise OutOfBoard         unless in_boards_reach      positions, board
-    raise RubyAlreadyTaken   unless rubies_not_taken     positions, board
-    raise MustTakeFromOneRow unless rubies_from_one_row  positions
-    raise RubiesNotConnected unless rubies_connected     positions
-  end
+  class << self
+    def check_for_errors(positions, board)
+      @@positions, @@board = positions, board
+      raise SelectSomething    unless someting_is_selected
+      raise OutOfBoard         unless in_boards_reach
+      raise RubyAlreadyTaken   unless rubies_not_taken
+      raise MustTakeFromOneRow unless rubies_from_one_row
+      raise RubiesNotConnected unless rubies_connected
+    end
 
-  private
+    def someting_is_selected
+      @@positions.size > 0
+    end
 
-  def self.someting_is_selected(positions)
-    positions.size > 0
-  end
+    def in_boards_reach
+      @@positions.none? { |row, column| @@board.filled_at?(row, column) == nil }
+    end
 
-  def self.in_boards_reach(positions, board)
-    positions.none? { |row, column| board.filled_at?(row, column) == nil }
-  end
+    def rubies_not_taken
+      @@positions.all? { |row, column| @@board.filled_at?(row, column) == true }
+    end
 
-  def self.rubies_not_taken(positions, board)
-    positions.all? { |row, column| board.filled_at?(row, column) == true }
-  end
+    def rubies_from_one_row
+      @@positions.map { |row, _| row }.uniq.size == 1
+    end
 
-  def self.rubies_from_one_row(positions)
-    positions.map { |row, _| row }.uniq.size == 1
-  end
-
-  def self.rubies_connected(positions)
-    columns = positions.flat_map { |_, column| column }
-    return true if columns.size == 1
-    columns.all? { |x| (columns & [x + 1, x - 1]).any? }
+    def rubies_connected
+      columns = @@positions.flat_map { |_, column| column }
+      return true if columns.size == 1
+      columns.all? { |x| (columns & [x + 1, x - 1]).any? }
+    end
   end
 end
 

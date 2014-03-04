@@ -3,12 +3,10 @@ Coveralls.wear!
 
 $:<< File.join(File.dirname(__FILE__), '..')
 
-# require 'json'
-# require 'bundler/setup'
-
 require 'engine/board'
 require 'engine/ai'
 require 'engine/game'
+require 'engine/game_api'
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

@@ -2,18 +2,14 @@ require "spec_helper"
 
 class RubiesBoard
   def initialize(rows=5, custom_board: false)
-    @rows = rows
-    custom_board ? @board = custom_board : @board = {}
-    initialize_board custom_board
-  end
-
-  private
-
-  def initialize_board(custom_board)
+    @rows  = rows
+    @board = {}
     if custom_board
-      board.keys.map { |row, column| fill row, column }
+      custom_board.keys.map { |row, column| @board[[row, column]] = true }
     else
-      1.upto(@rows).map { |row| fill_column row, rand(row..row*2) }
+      1.upto(rows).each do |row|
+        1.upto(rand(row..row*2)).map { |column| @board[[row, column]] = true }
+      end
     end
   end
 end
@@ -174,7 +170,7 @@ describe "AI" do
       custom_board.take_out [5, 2]
       custom_board.take_out [5, 4]
       test_ai = make_ai custom_board, difficulty=:hard
-      test_ai.moves.should eq [[5, 8], [5, 7], [5, 6]]
+      test_ai.moves.should eq [[5, 5], [5, 6], [5, 7]]
     end
 
     it "make sure algorithm catches cases where odd number of single rubies and one big stack on board" do
@@ -193,7 +189,7 @@ describe "AI" do
       custom_board.take_out [4, 1], [4, 2], [4, 3], [4, 4]
       custom_board.take_out [5, 1], [5, 2], [5, 3], [5, 4]
       test_ai = make_ai custom_board, difficulty=:hard
-      test_ai.moves.should eq [[5, 8], [5, 7], [5, 6], [5, 5]]
+      test_ai.moves.should eq [[5, 5], [5, 6], [5, 7], [5, 8]]
     end
 
     it "make sure algorithm catches cases where even number of single rubies and one big stack on board" do
@@ -212,7 +208,7 @@ describe "AI" do
       custom_board.take_out [4, 1], [4, 2], [4, 3], [4, 4]
       custom_board.take_out [5, 2], [5, 3], [5, 4]
       test_ai = make_ai custom_board, difficulty=:hard
-      test_ai.moves.should eq [[5, 8], [5, 7], [5, 6]]
+      test_ai.moves.should eq [[5, 5], [5, 6], [5, 7]]
     end
 
     it "takes ruby when even number of single rubies left" do
@@ -311,8 +307,7 @@ describe "AI" do
       custom_board.take_out [4, 2], [4, 3], [4, 4], [4, 5]
       custom_board.take_out [5, 2], [5, 3], [5, 4]
       test_ai   = make_ai custom_board, difficulty=:junior
-
-      test_ai.moves.should eq [[5, 8], [5, 7], [5, 6], [5, 5]]
+      test_ai.moves.should eq [[5, 5], [5, 6], [5, 7], [5, 8]]
     end
 
     def master_algorithm(*args)
@@ -323,12 +318,12 @@ describe "AI" do
       args.empty? ? AI::JuniorAlgorithm.new(board) : AI::JuniorAlgorithm.new(*args)
     end
   end
-end
 
-def make_board(*args)
-  RubiesBoard.new(*args)
-end
+  def make_board(*args)
+    RubiesBoard.new(*args)
+  end
 
-def make_ai(*args)
-  args.empty? ? AI.new(make_board) : AI.new(*args)
+  def make_ai(*args)
+    args.empty? ? AI.new(make_board) : AI.new(*args)
+  end
 end

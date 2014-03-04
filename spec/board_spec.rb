@@ -12,10 +12,6 @@ describe "RubiesBoard" do
     board.should respond_to :board
   end
 
-  it "verifies that RubiesBoard respond to picture method" do
-    board.should respond_to :picture
-  end
-
   it "verifies that RubiesBoard does not respond to fill column (mutator)" do
     board.should_not respond_to :fill_column
   end
@@ -95,62 +91,39 @@ describe "RubiesBoard" do
 
   it "raises custom error when out of board action occurs" do
     remove_these = [[1, 5]]
-    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::OutOfBoard)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorsHandler::OutOfBoard)
   end
 
   it "raises error when rubies taken are not on same row" do
     remove_these = [[1, 1], [2, 1]]
-    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::MustTakeFromOneRow)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorsHandler::MustTakeFromOneRow)
   end
 
   it "raises custom error when trying to take ruby, already taken" do
     board.take_out([2, 2])
     remove_these = [[2, 1], [2, 2]]
-    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::RubyAlreadyTaken)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorsHandler::RubyAlreadyTaken)
   end
 
   it "raises error when rubies taken are not connected" do
     remove_these = [[3, 1], [3, 3]]
-    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::RubiesNotConnected)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorsHandler::RubiesNotConnected)
   end
 
   it "verifies that exceptions are prioritize correctly" do
     remove_these = [[1, 1], [1, 5]]
-    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::OutOfBoard)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorsHandler::OutOfBoard)
   end
 
   it "verifies that MustTakeFromOneRow is with higher priority than RubiesNotConnected" do
     remove_these = [[3, 1], [3, 3], [4, 1]]
-    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::MustTakeFromOneRow)
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorsHandler::MustTakeFromOneRow)
   end
 
   it "verifies that RubyAlreadyTaken is with higher priority than RubiesNotConnected" do
     board.take_out([5, 3])
     remove_these = [[5, 2], [5, 3], [5, 5]]
-    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorHandler::RubyAlreadyTaken)
-  end
-
-  it "says that the picture of the board is in 5 lines" do
-    board.picture.count("\n").should eq 4
-  end
-
-  it "says that the picture of the small_board is with 2 lines (rows)" do
-    small_board.picture.count("\n").should eq 1
-  end
-
-  it "says that the rubies on the board are within in (15..30) range" do
-    board.picture.count('x').should be_between(15, 30)
-  end
-
-  it "says that the rubies on the small_board are within (3..6) range" do
-    small_board.picture.count('x').should be_between(3, 6)
-  end
-
-  it "illustrates when we take rubies off the board the picture changes" do
-    rubies_count_before = board.picture.count('x')
-    board.take_out([3, 1], [3, 2], [3, 3])
-    rubies_count_after  = board.picture.count('x')
-    rubies_count_before.should eq rubies_count_after + 3
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorsHandler::RubyAlreadyTaken)
   end
 
   context "initialization" do
@@ -168,8 +141,9 @@ describe "RubiesBoard" do
       end
     end
   end
+
+  def make_board(*args)
+    RubiesBoard.new(*args)
+  end
 end
 
-def make_board(*args)
-  RubiesBoard.new(*args)
-end

@@ -1,10 +1,0 @@
-o:RubiesGame:@boardo:RubiesBoard;{[iiF[iiF[iiT[iiT[iiT[ii	T[iiF[iiF[iiF[ii	F[ii
-F[i	iT[i	iT[i	iF[i	i	F[i	i
-F[i	iF[i	iF[i
-iF[i
-iF[i
-iF[i
-i	T[i
-i
-T[i
-iT:@first_playerI"human_player:ET:@second_playerI"computer;	T:@ai_difficultyI"	hard;	T:@last_moveI"=computer moved: [[4, 7], [4, 6], [4, 5], [4, 4], [4, 3]];	T:@on_turn[@ @!

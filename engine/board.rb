@@ -1,4 +1,4 @@
-class BoardErrorHandler
+class BoardErrorsHandler
   class MustTakeFromOneRow < StandardError
     def initialize(message="Rubies you take must be from one row")
       super(message)
@@ -73,16 +73,9 @@ class RubiesBoard
     end
   end
 
-  def picture
-    board_width = 2 * @board.keys.map { |_, column| column }.max
-    @board.keys.sort.group_by(&:first).values().map do |row|
-      row.map { |row, col| draw_position row, col }.join(' ').center(board_width).rstrip + "\n"
-    end.join('').chop
-  end
-
   def take_out(*positions)
     begin
-      BoardErrorHandler.check_for_errors(positions, self)
+      BoardErrorsHandler.check_for_errors(positions, self)
       positions.map { |row, column| empty(row, column) }
     rescue => error
       raise error
@@ -101,25 +94,5 @@ class RubiesBoard
 
   def empty(row, column)
     @board[[row, column]] = false
-  end
-
-  def fill(row, column)
-    @board[[row, column]] = true
-  end
-
-  def fill_column(row, columns_count)
-    1.upto(columns_count).each { |column| fill row, column }
-  end
-
-  def draw_position(row, column)
-    @board[[row, column]] ? draw_ruby : draw_taken_ruby
-  end
-
-  def draw_ruby
-    'x'
-  end
-
-  def draw_taken_ruby
-    'o'
   end
 end

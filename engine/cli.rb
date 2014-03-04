@@ -1,9 +1,12 @@
 # $:.unshift File.dirname(__FILE__)
-require "./board"
-require "./game"
-require "./ai"
+require_relative "./ai"
+require_relative "./game"
+require_relative "./board"
+require_relative "./game_api"
 
 class CLIGameplay
+  include RubiesGameAPI
+
   def initialize
     @computer, @ai_difficulty, @start_second_vs_ai, @load = nil
     initialize_game
@@ -31,23 +34,23 @@ class CLIGameplay
   end
 
   def initialize_game_vs_ai
-    @game = RubiesGame.new(RubiesBoard.new(), "computer", "human_player", @ai_difficulty)
+    @game = RubiesGame.new(RubiesBoard.new(), "computer", "human", @ai_difficulty)
   end
 
   def initialize_game_vs_human
-    @game = RubiesGame.new(RubiesBoard.new(), "first_player", "second_player")
+    @game = RubiesGame.new(RubiesBoard.new(), "first", "second")
   end
 
   def play_game
     while true
       return puts "The winner is " + @game.winner if @game.winner
-      puts @game.print_board
+      puts board_string(@game.board)
+      puts @game.last_move
       make_move
     end
   end
 
   def make_move
-    puts @game.last_move
     if @game.on_move_is == "computer"
       computer_move
     else
@@ -64,9 +67,9 @@ class CLIGameplay
   def player_move
     puts "write down your move " + @game.on_move_is + "\n"
     player_move = gets.chomp
-    save_game(player_move) if player_move.start_with? "save"
+    save(@game) if player_move.start_with? "save"
     begin
-      @game.human_move(player_move)
+      @game.make_move move_parser(player_move)
     rescue Exception => e
       puts e.message
     end

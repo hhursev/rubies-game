@@ -1,3 +1,5 @@
+require_relative "./game_api"
+
 class AI
   attr_reader :rubies_board, :difficulty
 
@@ -17,15 +19,18 @@ end
 
 class AI
   class BaseAlgorithmFunctionality
+    include RubiesGameAPI
+
     def initialize(rubies_board)
       @rubies_board = rubies_board
     end
 
     def stacks
-      @rubies_board.board.keys.sort.group_by(&:first).values().map do |row|
-        row.map { |row, column| @rubies_board.filled_at? row, column }
-           .slice_before(false).map { |slice| slice.count(true) }
-      end.flatten.reject { |stack| stack.zero? }
+      board = array_representation_of @rubies_board
+      board.flat_map { |row| [0] + row }
+           .chunk    { |elem| elem.eql? 1 }
+           .map      { |from_ones, seq| seq.size if from_ones }
+           .compact
     end
 
     def random_take
@@ -39,7 +44,7 @@ class AI
 
     def take(rubies_count, from_stack_sized)
       row, column = locate_stack(from_stack_sized)
-      0.upto(rubies_count - 1).map { |x| [row, column - x] }
+      1.upto(rubies_count).map { |x| [row, column + x] }
     end
 
     def locate_stack(stack_size)
@@ -48,16 +53,20 @@ class AI
         row.map do |row, column|
           @rubies_board.filled_at?(row, column) ? connected_rubies += 1 : connected_rubies = 0
           if connected_rubies == stack_size and not @rubies_board.filled_at?(row, column + 1)
-            return [row, column]
+            return [row, column - stack_size]
           end
         end
       end
+    end
+
+    def single_big_stack?
+      stacks.count(1).eql?(stacks.size - 1)
     end
   end
 
   class MasterAlgorithm < BaseAlgorithmFunctionality
     def decision
-      return single_rubies_with_stack if stacks.count(1).eql?(stacks.size - 1)
+      return single_rubies_with_stack if single_big_stack?
       return random_take              if nim_sum_zero?
       return perfect_move
     end
@@ -84,7 +93,7 @@ class AI
 
   class JuniorAlgorithm < BaseAlgorithmFunctionality
     def decision
-      if stacks.count(1).eql?(stacks.size - 1)
+      if single_big_stack?
         single_rubies_with_stack
       else
         random_take

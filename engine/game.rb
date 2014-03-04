@@ -29,33 +29,4 @@ class RubiesGame
       @on_turn.reverse!
     end
   end
-
-  def human_move(move)
-    rubies_to_take = parser(move)
-    make_move(rubies_to_take)
-  end
-
-  def print_board
-    "-" * (@board.board.keys.map { |_, x| x }.max * 2 - 1) + "\n" +
-    @board.picture                                         + "\n" +
-    "-" * (@board.board.keys.map { |_, x| x }.max * 2 - 1) + "\n"
-  end
-
-  def self.dump_to_file(game, file_name)
-    file_name = Time.now.strftime("%d_%m_%y_at_%H-%M-%S") if file_name.empty?
-    file = File.open("saved_games/#{file_name}", "w")
-    Marshal.dump(game, file)
-    file.close
-  end
-
-  private
-
-  def parser(move)
-    rubies_to_take = []
-    move.split(',').map do |str|
-      row, column = str.split(' ')
-      rubies_to_take << [row.to_i, column.to_i]
-    end
-    rubies_to_take
-  end
 end

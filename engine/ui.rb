@@ -48,15 +48,11 @@ class UIGameplay < Gosu::Window
     end
   end
 
-  private
+  protected
 
   def intro_menu
     buttons = ["Play vs friend", "Play vs AI", "Load Game", "Exit"]
     @buttons = Array.new(4) { |i| Button.new(self, buttons[i], y_offset: 130 + i * 45 )}
-  end
-
-  def draw_buttons
-    @buttons.each { |btn| btn.hovered?(mouse_x, mouse_y) ? btn.draw(HOVERED) : btn.draw(NORMAL) }
   end
 
   def draw_intro_menu
@@ -79,10 +75,39 @@ class UIGameplay < Gosu::Window
     get_rubies_positions if @rubies == {}
   end
 
+  def make_moves
+    if @game.winner
+      @error  = "The winner is: " + @game.winner
+      @rubies = {}
+    elsif @game.on_move_is == "computer"
+      computer = AI.new(@game.board, :hard)
+      ai_move = computer.moves
+      @game.make_move ai_move
+      get_rubies_positions
+    end
+  end
+
   def draw_game
     draw_buttons
     draw_rubies
     draw_info_texts
+  end
+
+  private
+
+  def get_rubies_pictures
+    rubies         = Gosu::Image.load_tiles(self, "../assets/matchsticks.png", 20, 100, false)
+    @ruby          = rubies.first
+    @selected_ruby = rubies.last
+  end
+
+  def draw_buttons
+    @buttons.each { |btn| btn.hovered?(mouse_x, mouse_y) ? btn.draw(HOVERED) : btn.draw(NORMAL) }
+  end
+
+  def draw_rubies
+    untouched_rubies_positions.map { |pos| @ruby.draw(pos.first, pos.last, 0) }
+    selected_rubies_positions.map { |pos| @selected_ruby.draw(pos.first, pos.last, 0) }
   end
 
   def draw_info_texts
@@ -92,23 +117,12 @@ class UIGameplay < Gosu::Window
     font.draw("It's #{@game.on_move_is} turn", 280, 50, 0, 1.0, 1.0, 0xff00ff00)
   end
 
-  def draw_rubies
-    untouched_rubies_positions.map { |pos| @ruby.draw(pos.first, pos.last, 0) }
-    selected_rubies_positions.map { |pos| @selected_ruby.draw(pos.first, pos.last, 0) }
-  end
-
   def untouched_rubies_positions
     @rubies.keys.keep_if { |key| @rubies[key][:status] == :untouched }
   end
 
   def selected_rubies_positions
     @rubies.keys.keep_if { |key| @rubies[key][:status] == :selected }
-  end
-
-  def get_rubies_pictures
-    rubies         = Gosu::Image.load_tiles(self, "../assets/matchsticks.png", 20, 100, false)
-    @ruby          = rubies.first
-    @selected_ruby = rubies.last
   end
 
   def initialize_game_vs_human
@@ -159,18 +173,6 @@ class UIGameplay < Gosu::Window
     end
   end
 
-  def make_moves
-    if @game.winner
-      @error  = "The winner is: " + @game.winner
-      @rubies = {}
-    elsif @game.on_move_is == "computer"
-      computer = AI.new(@game.board, @game.ai_difficulty.to_sym)
-      ai_move = computer.moves
-      @game.make_move ai_move
-      get_rubies_positions
-    end
-  end
-
   def submit_move
     begin
       selected = selected_rubies_positions.map { |pos| @rubies[pos][:position] }
@@ -184,22 +186,26 @@ class UIGameplay < Gosu::Window
 
   def game_state_button_handler(id)
     if id == Gosu::MsLeft
-      game_state_mouse_handler(id)
+      game_state_mouse_clicked_handler(id)
     elsif id == Gosu::KbReturn and @game.on_move_is != 'computer'
       submit_move
     end
   end
 
-  def game_state_mouse_handler(id)
-    if within_ruby_reach?
-      case @rubies[within_ruby_reach?][:status]
-      when :selected
-        @rubies[within_ruby_reach?].update(:status => :untouched)
-      when :untouched
-        @rubies[within_ruby_reach?].update(:status => :selected)
-      end
-    end
+  def game_state_mouse_clicked_handler(id)
+    game_state_clicked_on_rubies(within_ruby_reach?) if within_ruby_reach?
+    game_state_clicked_on_button
+  end
 
+  def game_state_clicked_on_rubies(position)
+    if @rubies[position][:status] == :untouched
+      @rubies[position].update(:status => :selected)
+    else
+      @rubies[position].update(:status => :untouched)
+    end
+  end
+
+  def game_state_clicked_on_button
     case button_clicked
       when "Submit"
         submit_move
@@ -239,28 +245,7 @@ class UIGameplay < Gosu::Window
   end
 
   def get_rubies_positions
-    board_str = board_string @game.board
-    x = 30
-    y = 10
-    row = column = 1
-    board_str.each_char do |symbol|
-      if symbol == " "
-        x += RUBY_WIDTH
-      elsif symbol == "o" or symbol == "x"
-        @rubies.update([x, y] =>
-                       {:position => [row, column], :status => :untouched}) if symbol == "x"
-        @rubies.update([x, y] =>
-                       {:position => [row, column], :status => :taken}) if symbol == "o"
-        column += 1
-        x += RUBY_WIDTH
-      elsif symbol == "\n"
-        column = 1
-        row += 1
-        x = 30
-        y += RUBY_HEIGHT + 20
-      end
-    end
-    @rubies
+    @rubies = RubiesPositionsToDraw.new(@game.board).rubies
   end
 end
 

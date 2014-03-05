@@ -43,3 +43,51 @@ module RubiesGameAPI
     elem == 1 ? 'x' : 'o'
   end
 end
+
+class RubiesPositionsToDraw
+  include RubiesGameAPI
+
+  attr_reader :rubies
+
+  def initialize(board)
+    @row, @column        = 1, 1
+    @x_offset, @y_offset = 30, 10
+    @rubies              = {}
+    @board_str           = board_string board
+    draw_rubies
+  end
+
+  def add_horizontal_margin
+    @x_offset += RUBY_WIDTH
+  end
+
+  def draw_ruby_there
+    @rubies.update([@x_offset, @y_offset] =>
+                   {:position => [@row, @column], :status => :untouched})
+    @column += 1
+    add_horizontal_margin
+  end
+
+  def draw_taken_ruby
+    @rubies.update([@x_offset, @y_offset] =>
+                   {:position => [@row, @column], :status => :taken})
+    @column += 1
+    add_horizontal_margin
+  end
+
+  def go_to_next_line
+    @row      += 1
+    @column    = 1
+    @x_offset  = 30
+    @y_offset += (RUBY_HEIGHT + 20)
+  end
+
+  def draw_rubies
+    @board_str.each_char do |symbol|
+      add_horizontal_margin if symbol == " "
+      draw_ruby_there if symbol == "x"
+      draw_taken_ruby if symbol == "o"
+      go_to_next_line if symbol == "\n"
+    end
+  end
+end

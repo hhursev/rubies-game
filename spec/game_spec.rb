@@ -50,6 +50,6 @@ describe "RubiesGame" do
   end
 
   def make_game(*args)
-    args.empty? ? RubiesGame.new(make_board, 'first_player', 'second_player') : RubiesGame.new(*args)
+    args.empty? ? RubiesGame.new(make_board, "first_player", "second_player") : RubiesGame.new(*args)
   end
 end

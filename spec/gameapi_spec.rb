@@ -129,6 +129,17 @@ describe "RubiesPositionsToDraw" do
     RubiesPositionsToDraw.new(game.board).rubies.should eq rubies_hash_must_be
   end
 
+  it "initialize rubies hash for the ui with one taken" do
+    game_instance = game
+    game_instance.board.take_out([1, 1])
+    rubies_hash_must_be = {
+      [50, 10]=>{:position=>[1, 1], :status=>:taken},
+      [30, 130]=>{:position=>[2, 1], :status=>:untouched},
+      [70, 130]=>{:position=>[2, 2], :status=>:untouched}
+    }
+    RubiesPositionsToDraw.new(game_instance.board).rubies.should eq rubies_hash_must_be
+  end
+
   def make_board(*args)
     RubiesBoard.new(*args)
   end

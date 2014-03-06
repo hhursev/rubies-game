@@ -126,6 +126,11 @@ describe "RubiesBoard" do
     expect { board.take_out(*remove_these) }.to raise_error(BoardErrorsHandler::RubyAlreadyTaken)
   end
 
+  it "verifies that at least something must be given to take_out method" do
+    remove_these = []
+    expect { board.take_out(*remove_these) }.to raise_error(BoardErrorsHandler::SelectSomething)
+  end
+
   context "initialization" do
     it "allows to set custom rows count" do
       custom_board = make_board(4)
@@ -139,6 +144,12 @@ describe "RubiesBoard" do
         columns_on_row = custom_board.board.keys.map { |r, column| column if r == row }
         (1.upto(row).to_a & columns_on_row).size.should eq row
       end
+    end
+
+    it "checks initialize method explicitly" do
+      board = RubiesBoard.new()
+      board.kind_of?(RubiesBoard).should eq true
+      board.instance_variables.should eq [:@rows, :@board]
     end
   end
 

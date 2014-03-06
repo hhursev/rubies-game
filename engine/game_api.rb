@@ -8,9 +8,9 @@ module RubiesGameAPI
     rubies_to_take
   end
 
-  def array_representation_of(board)
-    board.board.keys.sort.group_by(&:first).values().map do |row|
-      row.map { |row, col| board.filled_at?(row, col) ? 1 : 0 }
+  def array_representation_of(ruby_board)
+    ruby_board.board.keys.sort.group_by(&:first).values().map do |row|
+      row.map { |row, col| ruby_board.filled_at?(row, col) ? 1 : 0 }
     end
   end
 
@@ -22,9 +22,10 @@ module RubiesGameAPI
     end.join('').chop
   end
 
-  def save(game)
-    file_name = Time.now.strftime("%d_%m_%y_at_%H-%M-%S")
-    file = File.open("saved_games/#{file_name}", "w")
+  def save(game, f_name=false, in_dir=false)
+    f_name ? file_name = f_name : file_name = Time.now.strftime("%d_%m_%y_at_%H-%M-%S")
+    in_dir ? directory = in_dir : directory = "saved_games"
+    file = File.open("#{directory}/#{file_name}", "w")
     Marshal.dump(game, file)
     file.close
   end

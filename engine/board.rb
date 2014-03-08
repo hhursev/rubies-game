@@ -66,10 +66,13 @@ end
 class RubiesBoard
   attr_reader :board
 
-  def initialize(rows=5)
+  def initialize(rows=5, custom_board: false)
+    @rows  = rows
     @board = {}
-    1.upto(rows).each do |row|
-      1.upto(rand(row..row*2)).map { |column| board[[row, column]] = true }
+    if custom_board
+      custom_board.keys.map { |row, column| @board[[row, column]] = true }
+    else
+      populate_random_board
     end
   end
 
@@ -91,6 +94,12 @@ class RubiesBoard
   end
 
   private
+
+  def populate_random_board
+    1.upto(@rows).each do |row|
+      1.upto(rand(row..row*2)).map { |column| @board[[row, column]] = true }
+    end
+  end
 
   def empty(row, column)
     @board[[row, column]] = false

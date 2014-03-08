@@ -1,20 +1,7 @@
 require "spec_helper"
 
-class RubiesBoard
-  def initialize(rows=5, custom_board: false)
-    @rows  = rows
-    @board = {}
-    if custom_board
-      custom_board.keys.map { |row, column| @board[[row, column]] = true }
-    else
-      1.upto(rows).each do |row|
-        1.upto(rand(row..row*2)).map { |column| @board[[row, column]] = true }
-      end
-    end
-  end
-end
-
 describe "AI" do
+
   describe "MasterAlgorithm" do
     let (:ai)               { make_ai }
     let (:board)            { make_board }
@@ -283,9 +270,6 @@ describe "AI" do
 
       rows.uniq.size.should eq 1
       positions.each do |position|
-        if columns.size > 1
-          (columns & [position[column] + 1, position[column] - 1]).any?.should eq true
-        end
         custom_board.filled_at?(position[row], position[column]).should eq true
       end
     end

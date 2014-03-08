@@ -1,23 +1,9 @@
 require "spec_helper"
 
-class RubiesBoard
-  def initialize(rows=5, custom_board: false)
-    @rows  = rows
-    @board = {}
-    if custom_board
-      custom_board.keys.map { |row, column| @board[[row, column]] = true }
-    else
-      1.upto(rows).each do |row|
-        1.upto(rand(row..row*2)).map { |column| @board[[row, column]] = true }
-      end
-    end
-  end
-end
-
-class GameAPI
-end
-
 describe "GameAPIModule" do
+  class GameAPI
+  end
+
   let (:board) { make_board custom_board: {[1, 1] => nil, [2, 1] => nil, [2, 2] => nil} }
   let (:game) { make_game }
 

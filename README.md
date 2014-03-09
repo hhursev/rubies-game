@@ -14,22 +14,10 @@ Rubies Game
 - load/save game
 - saved game from cli can be continued in ui and vice versa as the engine beneath is the same
 
-###What lacks as of now:
-
-- UIGameplay class needs refactoring
-
-###Tests
-
-- full Board test coverage
-- full AI    test coverage
-- excellent GameController test coverage
-- lacks cli test coverage
-- lacks ui  test coverage
 
 #####Did You Know?
 
-If you understand how the AI works and start to beat it, basically you have mastered every other Nim type game. /wikipedia link/
-
+If you understand how the AI works and start to beat it, basically you have mastered every other [Nim type game.](https://en.wikipedia.org/wiki/Nim). /wikipedia link/
 
 Here are some sceenshots
 ---------------------------
